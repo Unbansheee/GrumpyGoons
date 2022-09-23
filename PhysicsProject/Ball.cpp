@@ -4,11 +4,12 @@
 
 #include "Log.h"
 #include <future>
+#include "Catapult.h"
 
 void Ball::OnConstruct()
 {
 
-
+    SetUpdatePriority(0);
     m_collider = new CircleCollider2D(GetPosition(), 25, m_Scene, SCALE);
     m_collider->SetOwner(this);
     
@@ -26,7 +27,6 @@ void Ball::OnConstruct()
 
 void Ball::BeginPlay()
 {
-    m_startDestroyTimer.Begin([&](){isDying = true;}, 4);
 }
 
 void Ball::FixedUpdate(float deltaTime)
@@ -38,7 +38,14 @@ void Ball::FixedUpdate(float deltaTime)
 void Ball::Update(float deltaTime)
 {
     Actor::Update(deltaTime);
-    
+
+    if (cam)
+    {
+        if (cam->GetParent() == this)
+        {
+            cam->SetOffset({0, 0});
+        }
+    }
 
     m_sprite.setOrigin(m_sprite.getTextureRect().width / 2.f, m_sprite.getTextureRect().height / 2.f);
 
@@ -75,6 +82,10 @@ void Ball::Draw()
 
 void Ball::OnDestroy()
 {
+    if (cam->GetParent() == this)
+    {
+        cam->SetParent(cat);
+    }
     delete m_collider;
 }
 
@@ -99,6 +110,18 @@ bool Ball::IsSimulatingPhysics() const
 void Ball::ApplyForce(const sf::Vector2f& force)
 {
     m_collider->ApplyForceToCenter(force);
+}
+
+void Ball::Fire(const sf::Vector2f& force, Catapult* catapult, Camera* camera)
+{
+    m_startDestroyTimer.Begin([&](){isDying = true;}, 4);
+
+    SetSimulatingPhysics(true);
+    ApplyForce(force);
+    
+    camera->SetParent(this);
+    cam = camera;
+    cat = catapult;
 }
 
 

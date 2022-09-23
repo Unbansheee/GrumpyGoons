@@ -6,6 +6,7 @@
 #include "FallingBlock.h"
 #include "Ground.h"
 #include "Ball.h"
+#include "Camera.h"
 #include "Catapult.h"
 #include "Enemy.h"
 
@@ -15,25 +16,31 @@ Scene::Scene() : m_world({0.0f, 9.8f})
     m_world.SetContactListener(listener);
     
     SpawnActor<Ground>({1000.f, 1080.f});
-    SpawnActor<Catapult>({300.0f, 960.f});
+    auto cat = SpawnActor<Catapult>({300.0f, 960.f});
 
-    SpawnActor<FallingBlock>({1800.f, 1000});
+    auto bl = SpawnActor<FallingBlock>({1800.f, 1000});
     SpawnActor<FallingBlock>({1800.f, 900});
     SpawnActor<FallingBlock>({1800.f, 800});
     SpawnActor<FallingBlock>({1800.f, 700});
 
     SpawnActor<Enemy>({1700.f, 1000.f});
-    
+    auto cam = SpawnActor<Camera>({Renderer::GetWindowSize().x / 2.f, Renderer::GetWindowSize().y / 2.f});
+    cam->SetActiveCamera();
+    cam->SetParent(cat);
+    cat->cam = cam;
 }
 
 void Scene::Update(float dt)
 {
+    std::sort(m_actorsToBeginPlay.begin(), m_actorsToBeginPlay.end(), [](const Actor* a, const Actor* b) { return a->GetUpdatePriority() < b->GetUpdatePriority(); });
     for (Actor* actor : m_actorsToBeginPlay)
     {
         actor->BeginPlay();
     }
     m_actorsToBeginPlay.clear();
-    
+
+    std::sort(m_actors.begin(), m_actors.end(), [](const Actor* a, const Actor* b) { return a->GetUpdatePriority() < b->GetUpdatePriority(); });
+
     for (int i = 0; i < m_actors.size(); ++i)
     {
         m_actors[i]->Update(dt);

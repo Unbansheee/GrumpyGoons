@@ -4,8 +4,10 @@
 
 #include "App.h"
 #include "Ball.h"
+#include "Camera.h"
 #include "Scene.h"
-
+#include "Input.h"
+#include "Log.h"
 
 void Catapult::OnConstruct()
 {
@@ -17,7 +19,7 @@ void Catapult::OnConstruct()
     pivot = GetPosition() + sf::Vector2f{ 0, -((float)m_texture.getSize().y)/2.f };
 
     m_rope.setSize(sf::Vector2f{ 2, 100 });
-    m_rope.setFillColor(sf::Color::Red);
+    m_rope.setFillColor(sf::Color(139,69,19));
     m_rope.setOrigin(1, 0);
     m_rope.setPosition(pivot);
     
@@ -40,16 +42,21 @@ void Catapult::Update(float deltaTime)
     
     if (App::GetWindow()->hasFocus())
     {
-    
-        if (!m_ball)
+
+        if (cam)
         {
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            if (cam->GetParent() == this)
             {
-                m_ball = m_Scene->SpawnActor<Ball>(pivot);
-                m_ball->SetSimulatingPhysics(false);
+                cam->SetOffset({Renderer::GetWindowSize().x * 0.35f, Renderer::GetWindowSize().y * -0.4f});
             }
         }
-
+        
+        if (Input::WasMouseButtonPressed(sf::Mouse::Left) && cam->GetParent() == this)
+        {
+            m_ball = m_Scene->SpawnActor<Ball>(pivot);
+            m_ball->SetSimulatingPhysics(false);
+        }
+        
         if (m_ball)
         {
             if (!m_ball->IsSimulatingPhysics())
@@ -67,19 +74,17 @@ void Catapult::Update(float deltaTime)
                     length = maxDistance;
                 }
             
-                if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                if (Input::IsMouseButtonDown(sf::Mouse::Left))
                 {
+                    
                     m_ball->SetPosition(pivot + normalizedDirection * length);
-                    m_primed = true;
                     m_rope.setSize({15.f - (0.04f * length), length});
                     m_rope.setOrigin(m_rope.getSize().x/2.f, 0);
                     m_rope.setRotation(( atan2(direction.y, direction.x) * 180 / 3.14159265) - 90);
                 }
-                else if (m_primed)
+                if (Input::WasMouseButtonReleased(sf::Mouse::Left))
                 {
-                    m_ball->SetSimulatingPhysics(true);
-                    m_ball->ApplyForce(-normalizedDirection * length * 800.0f);
-                    m_primed = false;
+                    m_ball->Fire(-normalizedDirection * length * 800.0f, this, cam);
                     m_ball = nullptr;
                 }
             
@@ -97,7 +102,7 @@ void Catapult::Draw()
 {
     Actor::Draw();
     Renderer::Submit(m_sprite, 10);
-    if (m_primed)
+    if (Input::IsMouseButtonDown(sf::Mouse::Left) && cam->GetParent() == this)
     {
         Renderer::Submit(m_rope, 9);
     }

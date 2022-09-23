@@ -9,7 +9,10 @@
 #include "CircleCollider2D.h"
 #include <future>
 
+#include "Camera.h"
 #include "TimedCallback.h"
+
+class Catapult;
 
 class Ball : public Actor
 {
@@ -26,6 +29,7 @@ public:
 
     void ApplyForce(const sf::Vector2f& force);
 
+    void Fire(const sf::Vector2f& force, Catapult* catapult, Camera* camera);
 private:
     CircleCollider2D* m_collider = nullptr;
     sf::CircleShape m_circle;
@@ -34,4 +38,6 @@ private:
     sf::Texture m_Texture;
     bool isDying = false;
     TimedCallback m_startDestroyTimer;
+    Camera* cam;
+    Catapult* cat;
 };

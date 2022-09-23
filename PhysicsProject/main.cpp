@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "App.h"
+#include "Input.h"
 #include "Scene.h"
 
 int main()
@@ -31,6 +32,7 @@ int main()
     
     while (window.isOpen())
     {
+        
         float dt = clock.restart().asSeconds();
         fixedTSCounter += dt;
 
@@ -41,6 +43,7 @@ int main()
         sf::Event event{};
         while (window.pollEvent(event))
         {
+            Input::ProcessEvent(event);
             if (event.type == sf::Event::Closed)
                 window.close();
         }
@@ -60,7 +63,7 @@ int main()
         scene.DeferredDestroy();
 
         
-
+        Input::Reset();
         window.display();
     }
 

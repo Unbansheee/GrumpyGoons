@@ -50,6 +50,9 @@ public:
     void RemoveAllTags();
     const std::vector<std::string>& GetTags() { return m_tags; }
     std::string GetTagsString();
+
+    void SetUpdatePriority(int priority) { m_updatePriority = priority; }
+    int GetUpdatePriority() const { return m_updatePriority; };
     
     void Destroy();
 
@@ -72,6 +75,7 @@ protected:
     float m_rotation = 0.0f;
 
     bool m_markedForDestroy = false;
+    int m_updatePriority = 0;
     int m_DrawPriority = 0;
     bool m_isVisible = true;
     bool m_shouldUpdate = true;
