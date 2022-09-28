@@ -19,8 +19,17 @@ void TimedCallback::Begin(std::function<void()> callback, float seconds)
     m_Task = std::async(std::launch::async, &TimedCallback::AsyncTask, this);
 }
 
+void TimedCallback::Stop()
+{
+    execute = false;   
+}
+
 void TimedCallback::AsyncTask()
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(int(m_Delay * 1000)));
-    m_Callback();
+    if (execute)
+    {
+        m_Callback();
+
+    }
 }

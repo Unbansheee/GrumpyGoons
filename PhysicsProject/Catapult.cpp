@@ -4,10 +4,12 @@
 
 #include "App.h"
 #include "Ball.h"
+#include "BombBall.h"
 #include "Camera.h"
 #include "Scene.h"
 #include "Input.h"
 #include "Log.h"
+#include "TripleBall.h"
 
 void Catapult::OnConstruct()
 {
@@ -43,6 +45,46 @@ void Catapult::Update(float deltaTime)
     if (App::GetWindow()->hasFocus())
     {
 
+        if (Input::WasKeyPressed(sf::Keyboard::Q))
+        {
+            switch (m_ballType)
+            {
+            case BallType::NORMAL:
+                m_ballType = BallType::BOMB;
+                break;
+                
+            case BallType::BOMB:
+                m_ballType = BallType::TRIPLE;
+                break;
+
+            case BallType::TRIPLE:
+                m_ballType = BallType::NORMAL;
+                break;
+            }
+            if (m_ball) m_ball->Destroy();
+            m_ball = nullptr;
+        }
+
+        if (Input::WasKeyPressed(sf::Keyboard::E))
+        {
+            switch (m_ballType)
+            {
+            case BallType::NORMAL:
+                m_ballType = BallType::TRIPLE;
+                break;
+
+            case BallType::BOMB:
+                m_ballType = BallType::NORMAL;
+                break;
+
+            case BallType::TRIPLE:
+                m_ballType = BallType::BOMB;
+                break;
+            }
+            if (m_ball) m_ball->Destroy();
+            m_ball = nullptr;
+        }
+        
         if (cam)
         {
             if (cam->GetParent() == this)
@@ -51,9 +93,20 @@ void Catapult::Update(float deltaTime)
             }
         }
         
-        if (Input::WasMouseButtonPressed(sf::Mouse::Left) && cam->GetParent() == this)
+        if (!m_ball && cam->GetParent() == this)
         {
-            m_ball = m_Scene->SpawnActor<Ball>(pivot);
+            switch (m_ballType)
+            {
+                case BallType::NORMAL:
+                    m_ball = m_Scene->SpawnActor<Ball>(pivot);
+                    break;
+                case BallType::BOMB:
+                    m_ball = m_Scene->SpawnActor<BombBall>(pivot);
+                    break;
+                case BallType::TRIPLE:
+                    m_ball = m_Scene->SpawnActor<TripleBall>(pivot);
+                    break;
+            }
             m_ball->SetSimulatingPhysics(false);
         }
         

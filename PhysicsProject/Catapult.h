@@ -8,6 +8,13 @@
 class Camera;
 class Ball;
 
+enum BallType
+{
+    NORMAL,
+    TRIPLE,
+    BOMB
+};
+
 class Catapult : public Actor
 {
 public:
@@ -26,7 +33,7 @@ private:
     sf::RectangleShape m_rope;
     sf::Vector2f pivot;
 
-
+    BallType m_ballType = BallType::NORMAL;
     
     Ball* m_ball = nullptr;
     bool m_primed = false;

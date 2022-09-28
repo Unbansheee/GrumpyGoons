@@ -32,6 +32,7 @@ Scene::Scene() : m_world({0.0f, 9.8f})
 
 void Scene::Update(float dt)
 {
+    
     std::sort(m_actorsToBeginPlay.begin(), m_actorsToBeginPlay.end(), [](const Actor* a, const Actor* b) { return a->GetUpdatePriority() < b->GetUpdatePriority(); });
     for (Actor* actor : m_actorsToBeginPlay)
     {
@@ -76,6 +77,7 @@ void Scene::DeferredDestroy()
     m_actorsToDestroy.clear();
     
 }
+
 
 void Scene::DestroyActor(Actor* actor)
 {

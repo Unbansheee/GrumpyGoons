@@ -5,6 +5,8 @@ void Ground::OnConstruct()
 {
     shape.setSize(sf::Vector2f(2000, 100));
     shape.setFillColor(sf::Color::Green);
+    shape.setOutlineColor(sf::Color::White);
+    shape.setOutlineThickness(-6.f);
     
     collider = new BoxCollider2D(GetPosition(), shape.getSize(), m_Scene, SCALE);
     collider->SetBodyType(b2_staticBody);

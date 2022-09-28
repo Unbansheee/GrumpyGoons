@@ -82,9 +82,13 @@ void Ball::Draw()
 
 void Ball::OnDestroy()
 {
-    if (cam->GetParent() == this)
+    if (cam)
     {
-        cam->SetParent(cat);
+        if (cam->GetParent() == this)
+        {
+            cam->SetParent(cat);
+        }
+        
     }
     delete m_collider;
 }
@@ -114,7 +118,9 @@ void Ball::ApplyForce(const sf::Vector2f& force)
 
 void Ball::Fire(const sf::Vector2f& force, Catapult* catapult, Camera* camera)
 {
-    m_startDestroyTimer.Begin([&](){isDying = true;}, 4);
+    fired = true;
+    m_startDestroyTimer.reset(new TimedCallback);
+    m_startDestroyTimer->Begin([&](){isDying = true;}, 4);
 
     SetSimulatingPhysics(true);
     ApplyForce(force);

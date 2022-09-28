@@ -29,15 +29,16 @@ public:
 
     void ApplyForce(const sf::Vector2f& force);
 
-    void Fire(const sf::Vector2f& force, Catapult* catapult, Camera* camera);
-private:
+    virtual void Fire(const sf::Vector2f& force, Catapult* catapult, Camera* camera);
+protected:
     CircleCollider2D* m_collider = nullptr;
     sf::CircleShape m_circle;
     sf::Sprite m_sprite;
     bool m_simulatingPhysics = true;
     sf::Texture m_Texture;
     bool isDying = false;
-    TimedCallback m_startDestroyTimer;
+    std::unique_ptr<TimedCallback> m_startDestroyTimer;
     Camera* cam;
     Catapult* cat;
+    bool fired = false;
 };

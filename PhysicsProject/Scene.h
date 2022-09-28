@@ -34,7 +34,7 @@ public:
     std::vector<Actor*> m_actors;
     std::vector<Actor*> m_actorsToDestroy;
     std::vector<Actor*> m_actorsToBeginPlay;
-
+    std::vector<std::pair<sf::Vector2f, float>> m_explosionsToSpawn;
 public:
     template <typename T>
     T* SpawnActor(const sf::Vector2f& location = {0, 0}, const float& angle = 0)
@@ -53,5 +53,9 @@ public:
 
 inline b2Body* Scene::CreateBody(const b2BodyDef* def)
 {
+    if (m_world.IsLocked())
+    {
+        return nullptr;
+    }
     return m_world.CreateBody(def);
 }
