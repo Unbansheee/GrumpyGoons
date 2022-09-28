@@ -167,6 +167,8 @@
     <ClCompile Include="PopAnimation.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Scene2.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Ticker.cpp" />
     <ClCompile Include="TimedCallback.cpp" />
     <ClCompile Include="TripleBall.cpp" />
@@ -232,6 +234,8 @@
     <ClInclude Include="PopAnimation.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="Scene2.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Ticker.h" />
     <ClInclude Include="TimedCallback.h" />
     <ClInclude Include="TripleBall.h" />

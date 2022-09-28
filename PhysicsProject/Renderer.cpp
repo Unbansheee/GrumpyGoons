@@ -1,8 +1,15 @@
 ﻿#include "Renderer.h"
 
+#include <SFML/Graphics/Text.hpp>
+
 void Renderer::Submit(sf::Drawable& drawable, int priority)
 {
     m_drawables.emplace_back(&drawable, priority);
+}
+
+void Renderer::Submit(sf::Text text, int priority)
+{
+    m_texts.emplace_back(text, priority);
 }
 
 void Renderer::Flush()
@@ -18,8 +25,16 @@ void Renderer::Flush()
     {
         m_window->draw(*drawable);
     }
+    
+    m_window->setView(m_window->getDefaultView());
+    for (auto [text, priority] : m_texts)
+    {
+        m_window->draw(text);
+    }
 
-
+    if (m_activeView) m_window->setView(*m_activeView);
+    
+    m_texts.clear();
     m_drawables.clear();
 }
 

@@ -17,6 +17,7 @@ public:
     void Draw() override;
     void OnCollisionEnter(CollisionData data);
 
+    inline static int enemyCount;
 private:
     CircleCollider2D* m_collider = nullptr;
     sf::Sprite m_sprite;

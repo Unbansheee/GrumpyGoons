@@ -1,17 +1,20 @@
 ﻿#pragma once
 #include <SFML/System/Vector2.hpp>
 #include <vector>
+#include <SFML/Graphics/Font.hpp>
+
 #include "Actor.h"
 #include "ContactListener.h"
 #include "box2d\box2D.h"
 
 class Scene
 {
-
-public:
-
+protected:
     Scene();
-
+    ~Scene();
+    friend class SceneManager;
+public:
+    
     void Update(float dt);
     void FixedUpdate(float dt);
     void Draw();
@@ -37,6 +40,8 @@ public:
     std::vector<Actor*> m_actorsToDestroy;
     std::vector<Actor*> m_actorsToBeginPlay;
     std::vector<std::pair<sf::Vector2f, float>> m_explosionsToSpawn;
+    sf::Font font;
+    int m_sceneIndex = -1;
 public:
     template <typename T>
     T* SpawnActor(const sf::Vector2f& location = {0, 0}, const float& angle = 0)

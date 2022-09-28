@@ -31,6 +31,8 @@ public:
     void ApplyForce(const sf::Vector2f& force);
 
     virtual void Fire(const sf::Vector2f& force, Catapult* catapult, Camera* camera);
+
+    inline static int BallsUsed;
 protected:
     CircleCollider2D* m_collider = nullptr;
     sf::CircleShape m_circle;

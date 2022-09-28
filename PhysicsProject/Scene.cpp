@@ -1,8 +1,10 @@
 ﻿#include "Scene.h"
 
 #include <iostream>
+#include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Mouse.hpp>
 
+#include "App.h"
 #include "FallingBlock.h"
 #include "Ground.h"
 #include "Ball.h"
@@ -10,12 +12,24 @@
 #include "Catapult.h"
 #include "Enemy.h"
 
+
+
 Scene::Scene() : m_world({0.0f, 9.8f})
 {
     listener = new ContactListener();
     m_world.SetContactListener(listener);
+    m_sceneIndex = 0;
+    m_world.SetAllowSleeping(true);
+    font.loadFromFile("Resources/Fonts/Roboto-Regular.ttf");
+}
 
-    SpawnActors();
+Scene::~Scene()
+{
+    delete listener;
+    for (auto actor : m_actors)
+    {
+        delete actor;
+    }
 }
 
 void Scene::Update(float dt)
@@ -34,6 +48,7 @@ void Scene::Update(float dt)
     {
         m_actors[i]->Update(dt);
     }
+    
 }
 
 void Scene::FixedUpdate(float dt)
@@ -52,6 +67,15 @@ void Scene::Draw()
     {
         actor->Draw();
     }
+
+    sf::Text birdsused("Goons Used: " + std::to_string(Ball::BallsUsed), font, 20);
+    sf::Text instructions("Press Q and E to switch Goons", font, 20);
+    birdsused.setPosition(30, 30);
+    birdsused.setFillColor(sf::Color::Black);
+    instructions.setPosition(30, Renderer::GetWindowSize().y - 50);
+    instructions.setFillColor(sf::Color::Black);
+    Renderer::Submit(birdsused, 10000);
+    Renderer::Submit(instructions, 10000);
 }
 
 void Scene::DeferredDestroy()
@@ -88,12 +112,12 @@ void Scene::SpawnActors()
     SpawnActor<FallingBlock>({1600.f, 1000}, 90.f)->AddTag("Destructible");
 
     //Right Wall
-    SpawnActor<FallingBlock>({1800.f, 900})->SetWeight(3);
-    SpawnActor<FallingBlock>({1800.f, 800})->SetWeight(3);
+    SpawnActor<FallingBlock>({1800.f, 920})->SetWeight(3);
+    SpawnActor<FallingBlock>({1800.f, 820})->SetWeight(3);
 
     //Left Wall
-    SpawnActor<FallingBlock>({1600.f, 900})->SetWeight(3);
-    SpawnActor<FallingBlock>({1600.f, 800})->SetWeight(3);
+    SpawnActor<FallingBlock>({1600.f, 920})->SetWeight(3);
+    SpawnActor<FallingBlock>({1600.f, 820})->SetWeight(3);
 
     //Roof
     auto roof = SpawnActor<FallingBlock>({1700.f, 780}, 90.f);
@@ -102,6 +126,9 @@ void Scene::SpawnActors()
     
 
     SpawnActor<Enemy>({1700.f, 900.f});
+    SpawnActor<Enemy>({1700.f, 690.f});
+    SpawnActor<Enemy>({1500.f, 1000.f});
+    
     auto cam = SpawnActor<Camera>({Renderer::GetWindowSize().x / 2.f, Renderer::GetWindowSize().y / 2.f});
     cam->SetActiveCamera();
     cam->SetParent(cat);

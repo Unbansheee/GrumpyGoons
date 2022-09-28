@@ -6,6 +6,7 @@
 
 void Enemy::OnConstruct()
 {
+    enemyCount++;
     m_collider = new CircleCollider2D(GetPosition(), 25, m_Scene, SCALE);
     m_collider->SetOwner(this);
     
@@ -39,6 +40,7 @@ void Enemy::OnDestroy()
     delete m_collider;
     auto pop = m_Scene->SpawnActor<PopAnimation>(GetPosition());
     pop->Play(sf::Color::White, 0.5f);
+    enemyCount--;
 }
 
 Enemy::~Enemy()
@@ -59,6 +61,8 @@ void Enemy::Update(float deltaTime)
     
     m_sprite.setPosition(GetPosition());
     m_sprite.setRotation(GetRotation());
+
+    if (GetPosition().y > 1200) Destroy();
 }
 
 void Enemy::Draw()

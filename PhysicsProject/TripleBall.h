@@ -13,4 +13,5 @@ private:
     bool m_isParent = true;
     Ticker dropTimer;
     Ticker dieTimer;
+    bool canDrop = false;
 };

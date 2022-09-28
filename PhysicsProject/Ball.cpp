@@ -10,6 +10,7 @@
 
 void Ball::OnConstruct()
 {
+    
     m_deathTicker = 4.f;
     
     SetUpdatePriority(0);
@@ -131,6 +132,7 @@ void Ball::ApplyForce(const sf::Vector2f& force)
 
 void Ball::Fire(const sf::Vector2f& force, Catapult* catapult, Camera* camera)
 {
+    BallsUsed++;
     fired = true;
 
     SetSimulatingPhysics(true);

@@ -4,8 +4,11 @@
 #include <iostream>
 
 #include "App.h"
+#include "Enemy.h"
 #include "Input.h"
 #include "Scene.h"
+#include "Scene2.h"
+#include "SceneManager.h"
 
 int main()
 {
@@ -28,7 +31,8 @@ int main()
     float fixedTSCounter = fixedTS;
 
     Renderer::m_window = &window;
-    Scene scene;
+    //Scene scene;
+    SceneManager::LoadScene<Scene2>();
     
     while (window.isOpen())
     {
@@ -48,20 +52,26 @@ int main()
                 window.close();
         }
 
-        scene.Update(dt);
+        SceneManager::Update(dt);
         
         if (fixedTSCounter >= fixedTS)
         {
-            scene.FixedUpdate(fixedTS);
+            SceneManager::FixedUpdate(fixedTS);
             fixedTSCounter = 0.0f;
         }
         
-        scene.Draw();
+        SceneManager::Draw();
 
         Renderer::Flush();
-        
-        scene.DeferredDestroy();
 
+        SceneManager::DeferredDestroy();
+        if (Enemy::enemyCount == 0)
+        {
+            if (SceneManager::GetSceneID() == 0)
+            {
+                SceneManager::LoadScene<Scene2>();
+            }
+        }
         
         Input::Reset();
         window.display();
