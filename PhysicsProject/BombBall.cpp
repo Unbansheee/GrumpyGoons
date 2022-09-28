@@ -1,6 +1,7 @@
 ﻿#include "BombBall.h"
 
 #include "Log.h"
+#include "PopAnimation.h"
 #include "Scene.h"
 
 class RayCastClosestCallback : public b2RayCastCallback
@@ -32,7 +33,7 @@ void BombBall::OnConstruct()
     {
         if (fired)
         {
-            
+            m_Scene->SpawnActor<PopAnimation>(GetPosition())->Play(sf::Color::Red, 1.f, 2.f, 300.f);
 
             //Explode on contact
             int numRays = 32;
@@ -66,13 +67,12 @@ void BombBall::OnConstruct()
                     {
                         if (hit->GetOwner())
                         {
-                            if (hit->GetOwner()->HasTag("Enemy"))
+                            if (hit->GetOwner()->HasAnyTag({"Enemy", "Destructible"}))
                             {
                                 if (impulseMag > 5)
                                 {
                                     hit->GetOwner()->Destroy();
                                 }
-                                Log::Print("Hit enemy");
                             }
                         }
                         
@@ -80,9 +80,7 @@ void BombBall::OnConstruct()
                     }
                 }
             }
-            if (m_startDestroyTimer.get())
-                m_startDestroyTimer->Stop();
-            m_startDestroyTimer.release();
+
             Destroy();
         
     });

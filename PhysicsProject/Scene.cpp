@@ -14,20 +14,8 @@ Scene::Scene() : m_world({0.0f, 9.8f})
 {
     listener = new ContactListener();
     m_world.SetContactListener(listener);
-    
-    SpawnActor<Ground>({1000.f, 1080.f});
-    auto cat = SpawnActor<Catapult>({300.0f, 960.f});
 
-    auto bl = SpawnActor<FallingBlock>({1800.f, 1000});
-    SpawnActor<FallingBlock>({1800.f, 900});
-    SpawnActor<FallingBlock>({1800.f, 800});
-    SpawnActor<FallingBlock>({1800.f, 700});
-
-    SpawnActor<Enemy>({1700.f, 1000.f});
-    auto cam = SpawnActor<Camera>({Renderer::GetWindowSize().x / 2.f, Renderer::GetWindowSize().y / 2.f});
-    cam->SetActiveCamera();
-    cam->SetParent(cat);
-    cat->cam = cam;
+    SpawnActors();
 }
 
 void Scene::Update(float dt)
@@ -87,6 +75,37 @@ void Scene::DestroyActor(Actor* actor)
         return;
     m_actorsToDestroy.push_back(actor);
     actor->MarkForDestroy();
+}
+
+void Scene::SpawnActors()
+{
+    SpawnActor<Ground>({1000.f, 1080.f});
+    auto cat = SpawnActor<Catapult>({300.0f, 960.f});
+
+    //Floor
+    SpawnActor<FallingBlock>({1800.f, 1000}, 90.f)->AddTag("Destructible");
+    SpawnActor<FallingBlock>({1700.f, 1000}, 90.f)->AddTag("Destructible");
+    SpawnActor<FallingBlock>({1600.f, 1000}, 90.f)->AddTag("Destructible");
+
+    //Right Wall
+    SpawnActor<FallingBlock>({1800.f, 900})->SetWeight(3);
+    SpawnActor<FallingBlock>({1800.f, 800})->SetWeight(3);
+
+    //Left Wall
+    SpawnActor<FallingBlock>({1600.f, 900})->SetWeight(3);
+    SpawnActor<FallingBlock>({1600.f, 800})->SetWeight(3);
+
+    //Roof
+    auto roof = SpawnActor<FallingBlock>({1700.f, 780}, 90.f);
+    roof->AddTag("Destructible");
+    roof->SetSize({20.f, 300.f});
+    
+
+    SpawnActor<Enemy>({1700.f, 900.f});
+    auto cam = SpawnActor<Camera>({Renderer::GetWindowSize().x / 2.f, Renderer::GetWindowSize().y / 2.f});
+    cam->SetActiveCamera();
+    cam->SetParent(cat);
+    cat->cam = cam;
 }
 
 void Scene::DestroyBody(b2Body* body)

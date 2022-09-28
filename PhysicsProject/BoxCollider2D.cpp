@@ -27,6 +27,9 @@ void BoxCollider2D::SetSize(const sf::Vector2f& size)
 {
     m_size = size;
     static_cast<b2PolygonShape*>(m_shape)->SetAsBox((m_size.x/2.f) / SCALE, (m_size.y/2.f) / SCALE);
+    m_fixtureDef.shape = m_shape;
+    m_body->DestroyFixture(m_body->GetFixtureList());
+    m_body->CreateFixture(&m_fixtureDef);
     
 }
 

@@ -19,6 +19,8 @@ public:
     
     void DestroyActor(Actor* actor);
 
+    virtual void SpawnActors();
+
     b2Body* CreateBody(const b2BodyDef* def);
     void DestroyBody(b2Body* body);
     

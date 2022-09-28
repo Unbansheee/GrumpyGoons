@@ -1,6 +1,8 @@
 ﻿#include "Enemy.h"
 
 #include "Log.h"
+#include "PopAnimation.h"
+#include "Scene.h"
 
 void Enemy::OnConstruct()
 {
@@ -35,6 +37,8 @@ void Enemy::BeginPlay()
 void Enemy::OnDestroy()
 {
     delete m_collider;
+    auto pop = m_Scene->SpawnActor<PopAnimation>(GetPosition());
+    pop->Play(sf::Color::White, 0.5f);
 }
 
 Enemy::~Enemy()

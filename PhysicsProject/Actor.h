@@ -3,6 +3,8 @@
 
 #include "Renderer.h"
 #include "TimedCallback.h"
+#include "MathUtils.h"
+
 class Scene;
 
 class Actor

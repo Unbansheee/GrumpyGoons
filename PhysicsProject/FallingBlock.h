@@ -13,6 +13,8 @@ public:
     void Draw() override;
     void OnDestroy() override;
     void OnConstruct() override;
+    void SetSize(sf::Vector2f size);
+    void SetWeight(float weight);
 
 private:
     sf::RectangleShape shape;

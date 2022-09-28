@@ -164,8 +164,10 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PopAnimation.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Ticker.cpp" />
     <ClCompile Include="TimedCallback.cpp" />
     <ClCompile Include="TripleBall.cpp" />
   </ItemGroup>
@@ -226,8 +228,11 @@
     <ClInclude Include="Includes\Box2D\box2d\box2d.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Log.h" />
+    <ClInclude Include="MathUtils.h" />
+    <ClInclude Include="PopAnimation.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="Ticker.h" />
     <ClInclude Include="TimedCallback.h" />
     <ClInclude Include="TripleBall.h" />
   </ItemGroup>

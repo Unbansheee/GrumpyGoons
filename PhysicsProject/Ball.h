@@ -10,7 +10,8 @@
 #include <future>
 
 #include "Camera.h"
-#include "TimedCallback.h"
+#include "Ticker.h"
+
 
 class Catapult;
 
@@ -37,8 +38,8 @@ protected:
     bool m_simulatingPhysics = true;
     sf::Texture m_Texture;
     bool isDying = false;
-    std::unique_ptr<TimedCallback> m_startDestroyTimer;
     Camera* cam;
     Catapult* cat;
     bool fired = false;
+    Ticker m_deathTicker;
 };

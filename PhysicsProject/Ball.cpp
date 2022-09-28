@@ -5,17 +5,20 @@
 #include "Log.h"
 #include <future>
 #include "Catapult.h"
+#include "PopAnimation.h"
+
 
 void Ball::OnConstruct()
 {
-
+    m_deathTicker = 4.f;
+    
     SetUpdatePriority(0);
     m_collider = new CircleCollider2D(GetPosition(), 25, m_Scene, SCALE);
     m_collider->SetOwner(this);
     
     m_collider->OnCollisionEnterCallback([](CollisionData data)
     {
-
+        
     });
     
     m_Texture.loadFromFile("Resources/Sprites/Ball.png");
@@ -72,6 +75,14 @@ void Ball::Update(float deltaTime)
         if (scaleX <= 0.1f) Destroy();
     }
 
+    if (fired)
+    {
+        if (m_deathTicker.Update(deltaTime))
+        {
+            isDying = true;
+        }
+    }
+
 }
 
 void Ball::Draw()
@@ -90,6 +101,8 @@ void Ball::OnDestroy()
         }
         
     }
+    m_Scene->SpawnActor<PopAnimation>(GetPosition())->Play(sf::Color::White, 0.5f);
+    
     delete m_collider;
 }
 
@@ -119,8 +132,6 @@ void Ball::ApplyForce(const sf::Vector2f& force)
 void Ball::Fire(const sf::Vector2f& force, Catapult* catapult, Camera* camera)
 {
     fired = true;
-    m_startDestroyTimer.reset(new TimedCallback);
-    m_startDestroyTimer->Begin([&](){isDying = true;}, 4);
 
     SetSimulatingPhysics(true);
     ApplyForce(force);
